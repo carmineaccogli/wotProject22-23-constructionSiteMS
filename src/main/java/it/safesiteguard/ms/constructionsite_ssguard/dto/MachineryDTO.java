@@ -20,7 +20,9 @@ public class MachineryDTO {
 
     private Machinery.TechSpecifications spec;
 
-    private Float seacureDistance;
+
+    private String board_macBLE;
+
 
     public String getId() {
         return id;
@@ -78,11 +80,11 @@ public class MachineryDTO {
         this.spec = spec;
     }
 
-    public Float getSeacureDistance() {
-        return seacureDistance;
+    public String getBoard_macBLE() {
+        return board_macBLE;
     }
 
-    public void setSeacureDistance(Float seacureDistance) {
-        this.seacureDistance = seacureDistance;
+    public void setBoard_macBLE(String board_macBLE) {
+        this.board_macBLE = board_macBLE;
     }
 }

@@ -20,9 +20,9 @@ public class MachineryMapper {
 
         machinery.setName(machineryDTO.getName());
         machinery.setPlate(machineryDTO.getIdentificationPlate());
-        machinery.setSecureDistance(machineryDTO.getSecureDistance());
         machinery.setSpec(machineryDTO.getSpecs());
         machinery.setTypeID(machineryDTO.getTypeName());
+        machinery.setBoard_macBLE(machineryDTO.getBoard_macBLE());
 
         return machinery;
     }
@@ -43,7 +43,7 @@ public class MachineryMapper {
         machineryDTO.setSpec(machinery.getSpec());
         machineryDTO.setPlate(machinery.getPlate());
         machineryDTO.setBeaconsAssociated(machinery.getBeaconsAssociated());
-        machineryDTO.setSeacureDistance(machinery.getSecureDistance());
+        machinery.setBoard_macBLE(machinery.getBoard_macBLE());
 
         return machineryDTO;
     }

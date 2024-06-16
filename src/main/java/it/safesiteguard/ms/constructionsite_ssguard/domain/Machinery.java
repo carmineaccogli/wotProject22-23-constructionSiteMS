@@ -27,8 +27,8 @@ public class Machinery {
 
     private TechSpecifications spec;
 
-    @Field("secureDistance_mt")
-    private Float secureDistance;
+    private String board_macBLE;
+
 
 
 
@@ -82,14 +82,6 @@ public class Machinery {
         this.spec = spec;
     }
 
-    public Float getSecureDistance() {
-        return secureDistance;
-    }
-
-    public void setSecureDistance(Float seacureDistance) {
-        this.secureDistance = seacureDistance;
-    }
-
     public String getName() {
         return name;
     }
@@ -98,10 +90,13 @@ public class Machinery {
         this.name = name;
     }
 
+    public String getBoard_macBLE() {
+        return board_macBLE;
+    }
 
-
-
-
+    public void setBoard_macBLE(String board_macBLE) {
+        this.board_macBLE = board_macBLE;
+    }
 
     public static class IdentificationPlate {
         private Integer yearOfManufacture;

@@ -1,10 +1,12 @@
 package it.safesiteguard.ms.constructionsite_ssguard.restcontrollers;
 
 
+import it.safesiteguard.ms.constructionsite_ssguard.domain.Beacon;
 import it.safesiteguard.ms.constructionsite_ssguard.domain.ConstructionMachineryType;
 import it.safesiteguard.ms.constructionsite_ssguard.domain.Machinery;
 import it.safesiteguard.ms.constructionsite_ssguard.domain.Worker;
 import it.safesiteguard.ms.constructionsite_ssguard.dto.*;
+import it.safesiteguard.ms.constructionsite_ssguard.exceptions.BeaconAlreadyAssociatedException;
 import it.safesiteguard.ms.constructionsite_ssguard.exceptions.MachineryNotFoundException;
 import it.safesiteguard.ms.constructionsite_ssguard.exceptions.MachineryTypeNotFoundException;
 import it.safesiteguard.ms.constructionsite_ssguard.exceptions.WorkerNotFoundException;
@@ -70,9 +72,10 @@ public class MachineryRestController {
     }
 
     @RequestMapping(value="/{machineryID}/beacons", method=RequestMethod.PATCH, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> addBeaconToMachinery(@PathVariable("machineryID") String machineryID, @Valid @RequestBody MachineryBeaconOnlyDTO machineryBeaconOnlyDTO) throws MachineryNotFoundException {
+    public ResponseEntity<?> addBeaconToMachinery(@PathVariable("machineryID") String machineryID, @Valid @RequestBody MachineryBeaconOnlyDTO machineryBeaconOnlyDTO) throws MachineryNotFoundException, BeaconAlreadyAssociatedException {
 
-        machineryService.addBeaconToMachinery(machineryID, machineryBeaconOnlyDTO.getBeaconID());
+        Beacon beaconToAdd = machineryMapper.fromMachineryBeaconDTOToBeacon(machineryBeaconOnlyDTO);
+        machineryService.addBeaconToMachinery(machineryID, beaconToAdd);
         return ResponseEntity.noContent().build();
     }
 

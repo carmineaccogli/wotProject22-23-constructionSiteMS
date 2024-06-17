@@ -1,5 +1,6 @@
 package it.safesiteguard.ms.constructionsite_ssguard.exceptions;
 import com.fasterxml.jackson.databind.exc.InvalidTypeIdException;
+import it.safesiteguard.ms.constructionsite_ssguard.domain.Beacon;
 import it.safesiteguard.ms.constructionsite_ssguard.dto.ExceptionDTO;
 import org.springframework.core.MethodParameter;
 import org.springframework.dao.DuplicateKeyException;
@@ -103,6 +104,20 @@ public class CustomExceptionHandler {
                         3,
                         MappingAlreadyExistsException.class.getSimpleName(),
                         ex.getMessage()
+                ));
+    }
+
+
+
+
+    @ExceptionHandler(BeaconAlreadyAssociatedException.class)
+    public ResponseEntity<Object> alreadyAssociateBeaconHandler(BeaconAlreadyAssociatedException ex) {
+
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ExceptionDTO(
+                        4,
+                        BeaconAlreadyAssociatedException.class.getSimpleName(),
+                        "Beacon already associated to this machinery"
                 ));
     }
 

@@ -25,10 +25,7 @@ public class MachineryRegistrationDTO {
     @ValidTechSpecifications
     private Machinery.TechSpecifications specs;
 
-    @NotNull(message = "{NotBlank.machinery.secureDistance}")
-    @Min(value = 0, message = "{Min.machinery.secureDistance}")
-    private Float secureDistance;
-
+    @NotBlank(message="{NotBlank.machinery.board_macBLE}")
     @Pattern(regexp = "^(([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2}))$", message = "Mac address format not valid")
     private String board_macBLE;
 
@@ -64,14 +61,6 @@ public class MachineryRegistrationDTO {
 
     public void setSpecs(Machinery.TechSpecifications specs) {
         this.specs = specs;
-    }
-
-    public Float getSecureDistance() {
-        return secureDistance;
-    }
-
-    public void setSecureDistance(Float secureDistance) {
-        this.secureDistance = secureDistance;
     }
 
     public String getBoard_macBLE() {

@@ -21,7 +21,7 @@ public class Machinery {
 
     private State state;
 
-    private List<String> beaconsAssociated;
+    private List<Beacon> beaconsAssociated;
 
     private IdentificationPlate plate;
 
@@ -58,11 +58,11 @@ public class Machinery {
         this.state = state;
     }
 
-    public List<String> getBeaconsAssociated() {
+    public List<Beacon> getBeaconsAssociated() {
         return beaconsAssociated;
     }
 
-    public void setBeaconsAssociated(List<String> beaconsAssociated) {
+    public void setBeaconsAssociated(List<Beacon> beaconsAssociated) {
         this.beaconsAssociated = beaconsAssociated;
     }
 

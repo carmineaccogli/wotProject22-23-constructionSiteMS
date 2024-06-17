@@ -1,5 +1,6 @@
 package it.safesiteguard.ms.constructionsite_ssguard.dto;
 
+import it.safesiteguard.ms.constructionsite_ssguard.domain.Beacon;
 import it.safesiteguard.ms.constructionsite_ssguard.domain.Machinery;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public class MachineryDTO {
 
     private Machinery.State state;
 
-    private List<String> beaconsAssociated;
+    private List<Beacon> beaconsAssociated;
 
     private Machinery.IdentificationPlate plate;
 
@@ -56,11 +57,11 @@ public class MachineryDTO {
         this.state = state;
     }
 
-    public List<String> getBeaconsAssociated() {
+    public List<Beacon> getBeaconsAssociated() {
         return beaconsAssociated;
     }
 
-    public void setBeaconsAssociated(List<String> beaconsAssociated) {
+    public void setBeaconsAssociated(List<Beacon> beaconsAssociated) {
         this.beaconsAssociated = beaconsAssociated;
     }
 

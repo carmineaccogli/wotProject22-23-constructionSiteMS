@@ -1,7 +1,9 @@
 package it.safesiteguard.ms.constructionsite_ssguard.mappers;
 
+import it.safesiteguard.ms.constructionsite_ssguard.domain.Beacon;
 import it.safesiteguard.ms.constructionsite_ssguard.domain.ConstructionMachineryType;
 import it.safesiteguard.ms.constructionsite_ssguard.domain.Machinery;
+import it.safesiteguard.ms.constructionsite_ssguard.dto.MachineryBeaconOnlyDTO;
 import it.safesiteguard.ms.constructionsite_ssguard.dto.MachineryDTO;
 import it.safesiteguard.ms.constructionsite_ssguard.dto.MachineryRegistrationDTO;
 import it.safesiteguard.ms.constructionsite_ssguard.exceptions.MachineryTypeNotFoundException;
@@ -43,8 +45,18 @@ public class MachineryMapper {
         machineryDTO.setSpec(machinery.getSpec());
         machineryDTO.setPlate(machinery.getPlate());
         machineryDTO.setBeaconsAssociated(machinery.getBeaconsAssociated());
-        machinery.setBoard_macBLE(machinery.getBoard_macBLE());
+        machineryDTO.setBoard_macBLE(machinery.getBoard_macBLE());
 
         return machineryDTO;
+    }
+
+    public Beacon fromMachineryBeaconDTOToBeacon (MachineryBeaconOnlyDTO beaconOnlyDTO) {
+        Beacon beacon = new Beacon();
+
+        beacon.setPosition(beaconOnlyDTO.getPosition());
+        beacon.setMacAddress(beaconOnlyDTO.getMacAddress());
+        beacon.setSafetyDistance(beaconOnlyDTO.getSafetyDistance());
+
+        return beacon;
     }
 }

@@ -9,6 +9,7 @@ import it.safesiteguard.ms.constructionsite_ssguard.dto.*;
 import it.safesiteguard.ms.constructionsite_ssguard.exceptions.DailyMappingDateNotValidException;
 import it.safesiteguard.ms.constructionsite_ssguard.exceptions.InvalidDailyMappingException;
 import it.safesiteguard.ms.constructionsite_ssguard.exceptions.MappingAlreadyExistsException;
+import it.safesiteguard.ms.constructionsite_ssguard.mappers.MachineryMapper;
 import it.safesiteguard.ms.constructionsite_ssguard.mappers.SiteConfigurationMapper;
 import it.safesiteguard.ms.constructionsite_ssguard.service.SiteConfigurationService;
 import jakarta.validation.Valid;
@@ -35,6 +36,9 @@ public class DailyMappingRestController {
 
     @Autowired
     private SiteConfigurationService siteConfigurationService;
+
+    @Autowired
+    private MachineryMapper machineryMapper;
 
 
     @RequestMapping(value="/", method= RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -64,24 +68,26 @@ public class DailyMappingRestController {
         return ResponseEntity.ok(lastDailyMappingDTO);
     }
 
-    /**
-     * TODO Ottenere la lista di beacon attivi durante una certa giornata
-     */
-    /*
-    @RequestMapping(value="/activebeacons", method =RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<String>> getActiveBeaconsListForToday() {
 
-
-    }*/
-
-    @RequestMapping(value="/equipmentOperators/{driverID}", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<EquipmentOperatorMachineryDTO>> getEnabledMachinesForDriver(@PathVariable("driverID") String driverID) {
-        Map<String, String> todayEnabledMachines = siteConfigurationService.getTodayEnabledMachinesForDriver(driverID);
+    @RequestMapping(value="/beacons", method =RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<EnabledMachineryDTO>> getActiveBeaconsListForToday() {
+        List<Machinery> todayEnabledMachines = siteConfigurationService.getTodayEnabledMachines();
 
         if(todayEnabledMachines.isEmpty())
             return ResponseEntity.noContent().build();
 
-        List<EquipmentOperatorMachineryDTO> allMachinesDTO = fromMappingToDTO(todayEnabledMachines);
+        List<EnabledMachineryDTO> allMachinesDTO = fromListEnabledMachinesToDTO(todayEnabledMachines);
+        return ResponseEntity.ok(allMachinesDTO);
+    }
+
+    @RequestMapping(value="/equipmentOperators/{driverID}", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<EquipmentOperatorMachineryDTO>> getEnabledMachinesForDriver(@PathVariable("driverID") String driverID) {
+        Map<String, String> todayEnabledMachinesByDriver = siteConfigurationService.getTodayEnabledMachinesForDriver(driverID);
+
+        if(todayEnabledMachinesByDriver.isEmpty())
+            return ResponseEntity.noContent().build();
+
+        List<EquipmentOperatorMachineryDTO> allMachinesDTO = fromMappingToDTO(todayEnabledMachinesByDriver);
         return ResponseEntity.ok(allMachinesDTO);
     }
 
@@ -98,6 +104,17 @@ public class DailyMappingRestController {
             equipmentList.add(equipmentDTO);
         }
         return equipmentList;
+    }
+
+    private List<EnabledMachineryDTO> fromListEnabledMachinesToDTO(List<Machinery> allMachines) {
+        List<EnabledMachineryDTO> allMachinesDTO = new ArrayList<>();
+
+        for(Machinery machinery: allMachines) {
+            EnabledMachineryDTO machineryDTO = machineryMapper.fromMachineryToEnabledMachineryDTO(machinery);
+            allMachinesDTO.add(machineryDTO);
+        }
+
+        return allMachinesDTO;
     }
 
 }

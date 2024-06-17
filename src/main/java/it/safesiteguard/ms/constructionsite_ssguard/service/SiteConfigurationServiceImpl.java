@@ -141,6 +141,35 @@ public class SiteConfigurationServiceImpl implements SiteConfigurationService {
         return idMac_map;
     }
 
+    public List<Machinery> getTodayEnabledMachines() {
+
+        List<Machinery> enabledMachines = new ArrayList<>();
+
+        DailySiteConfiguration dailyConfiguration = getLastSiteConfiguration();
+        if(dailyConfiguration == null)
+            return enabledMachines;
+
+         for(DailySiteConfiguration.ActiveMachines activeMachine: dailyConfiguration.getActiveMachines()) {
+
+             Machinery machineryToAdd = new Machinery();
+             machineryToAdd.setId(activeMachine.getMachineryID());
+
+             try {
+                 Machinery found = machineryService.findMachineryById(machineryToAdd.getId());
+                 machineryToAdd.setBeaconsAssociated(found.getBeaconsAssociated());
+             } catch (Exception ex) {
+                 System.out.println("Error in finding machinery ID");
+                 ex.printStackTrace();
+             }
+
+             enabledMachines.add(machineryToAdd);
+         }
+
+
+
+        return enabledMachines;
+    }
+
 
     /** TASK DI SCHEDULING PER L'AGGIORNAMENTO AUTOMATICO DELLA CONFIGURAZIONE DEL CANTIERE
      *  Timing schedulazione: ogni giorno a 00:00

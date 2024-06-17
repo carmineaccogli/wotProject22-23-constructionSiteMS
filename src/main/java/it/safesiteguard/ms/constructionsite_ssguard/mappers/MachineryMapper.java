@@ -3,6 +3,7 @@ package it.safesiteguard.ms.constructionsite_ssguard.mappers;
 import it.safesiteguard.ms.constructionsite_ssguard.domain.Beacon;
 import it.safesiteguard.ms.constructionsite_ssguard.domain.ConstructionMachineryType;
 import it.safesiteguard.ms.constructionsite_ssguard.domain.Machinery;
+import it.safesiteguard.ms.constructionsite_ssguard.dto.EnabledMachineryDTO;
 import it.safesiteguard.ms.constructionsite_ssguard.dto.MachineryBeaconOnlyDTO;
 import it.safesiteguard.ms.constructionsite_ssguard.dto.MachineryDTO;
 import it.safesiteguard.ms.constructionsite_ssguard.dto.MachineryRegistrationDTO;
@@ -10,6 +11,9 @@ import it.safesiteguard.ms.constructionsite_ssguard.exceptions.MachineryTypeNotF
 import it.safesiteguard.ms.constructionsite_ssguard.service.MachineryTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class MachineryMapper {
@@ -58,5 +62,14 @@ public class MachineryMapper {
         beacon.setSafetyDistance(beaconOnlyDTO.getSafetyDistance());
 
         return beacon;
+    }
+
+    public EnabledMachineryDTO fromMachineryToEnabledMachineryDTO(Machinery machinery) {
+        EnabledMachineryDTO enabledMachineryDTO = new EnabledMachineryDTO();
+
+        enabledMachineryDTO.setMachineryID(machinery.getId());
+        enabledMachineryDTO.setBeaconList(machinery.getBeaconsAssociated());
+
+        return enabledMachineryDTO;
     }
 }

@@ -6,6 +6,7 @@ import it.safesiteguard.ms.constructionsite_ssguard.validators.ValidTechSpecific
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 public class MachineryRegistrationDTO {
 
@@ -27,6 +28,9 @@ public class MachineryRegistrationDTO {
     @NotNull(message = "{NotBlank.machinery.secureDistance}")
     @Min(value = 0, message = "{Min.machinery.secureDistance}")
     private Float secureDistance;
+
+    @Pattern(regexp = "^(([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2}))$", message = "Mac address format not valid")
+    private String board_macBLE;
 
 
     public String getName() {
@@ -68,5 +72,13 @@ public class MachineryRegistrationDTO {
 
     public void setSecureDistance(Float secureDistance) {
         this.secureDistance = secureDistance;
+    }
+
+    public String getBoard_macBLE() {
+        return board_macBLE;
+    }
+
+    public void setBoard_macBLE(String board_macBLE) {
+        this.board_macBLE = board_macBLE;
     }
 }

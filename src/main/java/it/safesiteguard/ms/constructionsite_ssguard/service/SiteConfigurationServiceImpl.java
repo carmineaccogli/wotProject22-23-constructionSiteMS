@@ -16,10 +16,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -80,17 +77,21 @@ public class SiteConfigurationServiceImpl implements SiteConfigurationService {
         DailySiteConfiguration addedConfiguration = siteConfigurationRepository.save(siteConfiguration);
 
         // 5
-        if(mappingDate.equals(LocalDate.now())) {
+        /*if(mappingDate.equals(LocalDate.now())) {
             // 5.1
             resetMachineriesState();
             //5.2
             updateMachineriesState(siteConfiguration.getActiveMachines());
             // 5.3
             sendAuthOperatorsInfo_ViaMQTT(siteConfiguration.getActiveMachines());
-        }
+        }*/
 
         return addedConfiguration.getId();
     }
+
+    /*public List<String> activeBeaconsList() {
+        
+    }*/
 
 
 
@@ -112,6 +113,32 @@ public class SiteConfigurationServiceImpl implements SiteConfigurationService {
         }
 
         return todayConfiguration.get();
+    }
+
+    public Map<String,String> getTodayEnabledMachinesForDriver(String driverID) {
+
+        Map<String, String> idMac_map = new HashMap<>();
+
+        DailySiteConfiguration dailyConfiguration = getLastSiteConfiguration();
+        if (dailyConfiguration == null)
+            return idMac_map;
+
+        for(DailySiteConfiguration.ActiveMachines activeMachines: dailyConfiguration.getActiveMachines()) {
+
+            for(DailySiteConfiguration.InfoOperator operator: activeMachines.getInfoOperator()) {
+                if(operator.getId().equals(driverID)) {
+                    try {
+                        Machinery machinery = machineryService.findMachineryById(activeMachines.getMachineryID());
+                        idMac_map.put(activeMachines.getMachineryID(), machinery.getBoard_macBLE());
+                        break;
+                    } catch(Exception e) {
+                        System.out.println("Exception in finding machinery's BLE mac address");
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return idMac_map;
     }
 
 

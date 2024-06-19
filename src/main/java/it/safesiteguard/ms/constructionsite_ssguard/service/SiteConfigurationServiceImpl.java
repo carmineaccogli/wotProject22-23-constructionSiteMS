@@ -1,17 +1,18 @@
 package it.safesiteguard.ms.constructionsite_ssguard.service;
 
-import it.safesiteguard.ms.constructionsite_ssguard.domain.ConstructionMachineryType;
-import it.safesiteguard.ms.constructionsite_ssguard.domain.DailySiteConfiguration;
-import it.safesiteguard.ms.constructionsite_ssguard.domain.Machinery;
-import it.safesiteguard.ms.constructionsite_ssguard.domain.Worker;
+import it.safesiteguard.ms.constructionsite_ssguard.domain.*;
 import it.safesiteguard.ms.constructionsite_ssguard.dto.AuthorizedOperatorDTO;
 import it.safesiteguard.ms.constructionsite_ssguard.exceptions.DailyMappingDateNotValidException;
 import it.safesiteguard.ms.constructionsite_ssguard.exceptions.InvalidDailyMappingException;
 import it.safesiteguard.ms.constructionsite_ssguard.exceptions.MappingAlreadyExistsException;
+import it.safesiteguard.ms.constructionsite_ssguard.exceptions.TaskFailedException;
 import it.safesiteguard.ms.constructionsite_ssguard.messages.OperatorsConfigMessage;
 import it.safesiteguard.ms.constructionsite_ssguard.repositories.DailySiteConfigurationRepository;
+import it.safesiteguard.ms.constructionsite_ssguard.repositories.TaskStatusRepository;
 import org.eclipse.paho.mqttv5.common.MqttException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +40,9 @@ public class SiteConfigurationServiceImpl implements SiteConfigurationService {
 
     @Autowired
     private MqttPublisher mqttPublisher;
+
+    @Autowired
+    private TaskStatusRepository taskStatusRepository;
 
 
     /** Funzione per l'aggiunta di una nuova configurazione per il cantiere
@@ -88,10 +92,6 @@ public class SiteConfigurationServiceImpl implements SiteConfigurationService {
 
         return addedConfiguration.getId();
     }
-
-    /*public List<String> activeBeaconsList() {
-        
-    }*/
 
 
 
@@ -170,38 +170,98 @@ public class SiteConfigurationServiceImpl implements SiteConfigurationService {
         return enabledMachines;
     }
 
-
-    /** TASK DI SCHEDULING PER L'AGGIORNAMENTO AUTOMATICO DELLA CONFIGURAZIONE DEL CANTIERE
-     *  Timing schedulazione: ogni giorno a 00:00
-     *
-     *  1) Reset di quei macchinari con campo "status"="ACTIVE" a "INACTIVE"
+    /** 1) Reset di quei macchinari con campo "status"="ACTIVE" a "INACTIVE"
      *  2) Verificare se è presente una daily configuration relativa al giorno corrente
-     *      2.1) Se si, significa che il responsabile della sicurezza ha già aggiunto nella giornata precedente la configurazione per il giorno corrente
-     *           Iteriamo sui macchinari indicati nella configurazione e settiamo il loro campo "status"="ACTIVE"
-     *      2.2) Invio configurazione operatori al topic MQTT di configurazione dei macchinari
+     *          2.1) Se si, significa che il responsabile della sicurezza ha già aggiunto nella giornata precedente la configurazione per il giorno corrente
+     *                Iteriamo sui macchinari indicati nella configurazione e settiamo il loro campo "status"="ACTIVE"
+     *          2.2) Invio configurazione operatori al topic MQTT di configurazione dei macchinari
+     * @return
      */
 
-    @Scheduled(cron="*/60 * * * * *") // test ogni 60 secondi
-    //(cron="@midnight")
-    /**
-     * TODO gestire retry policy del task schedulato
-     */
-    public void dailyConfigurationUpdate() {
-
+    private boolean execute_updateTask() {
         // 1
         resetMachineriesState();
 
         // 2
         Optional<DailySiteConfiguration> todayConfiguration = siteConfigurationRepository.findByDate(LocalDate.now());
-        if(!todayConfiguration.isEmpty()) {
+        if(todayConfiguration.isPresent()) {
             updateMachineriesState(todayConfiguration.get().getActiveMachines());
 
             try {
                 sendAuthOperatorsInfo_ViaMQTT(todayConfiguration.get().getActiveMachines());
-            }catch (MqttException ex) {
-
+                return true;
+            }catch (Exception ex) {
+                ex.printStackTrace();
+                return false;
             }
         }
+        return false;
+    }
+
+
+    /** TASK DI SCHEDULING PER L'AGGIORNAMENTO AUTOMATICO DELLA CONFIGURAZIONE DEL CANTIERE
+     *  Timing schedulazione: ogni giorno a 00:00
+     *
+     *  1) Check esistenza documento con informazioni relative all'attuale task schedulato
+     *  2) Se esiste:
+     *      2.1) Controllo se la data di esecuzione (che se settata indica una esecuzione eseguita correttamente)
+     *           è uguale a quella di oggi: il task è stato già eseguito per oggi
+     *      2.2) Eseguo il task di applicazione della configurazione
+     *      2.3) Se eseguito correttamente, aggiorno la data di ultima corretta esecuzione
+     *  3) Se non esiste (è la prima volta in assoluto che il task viene eseguito):
+     *      3.1) Eseguo il task di update
+     *      3.2) Creo il documento per registrare l'avvenuta esecuzione
+     *  Notare che in tutti i casi di errore, viene sollevata una eccezione specifica che permette il retry
+     *  , secondo le policy settate, del task di scheduling
+     *
+     */
+
+    @Scheduled(cron = "0 */3 * * * *") // test ogni 3 minuti
+    //(cron="@midnight")
+    @Retryable(
+            retryFor = TaskFailedException.class,
+            maxAttempts = 3,
+            backoff = @Backoff(delay = 10000)
+    )
+    public void dailyConfigurationUpdate() {
+
+        // 1
+        Optional<TaskStatus> optTaskInfo = taskStatusRepository.findByTaskName("dailyConfiguration");
+
+        // 2
+        if(optTaskInfo.isPresent()) {
+            TaskStatus taskInfo = optTaskInfo.get();
+
+            // 2.1
+            if(taskInfo.getLastExecution().equals(LocalDate.now()))
+                return;
+
+            // 2.2
+            boolean updateStatus = execute_updateTask();
+
+            // 2.3
+            if(updateStatus) {
+                taskInfo.setLastExecution(LocalDate.now());
+                taskStatusRepository.save(taskInfo);
+                return;
+            }
+            else
+                throw new TaskFailedException();
+        }
+
+        // 3
+        boolean updateStatus = execute_updateTask();
+
+        // 3.1
+        if(updateStatus) {
+            TaskStatus newTaskStatus = new TaskStatus();
+            newTaskStatus.setTaskName("dailyConfiguration");
+            newTaskStatus.setLastExecution(LocalDate.now());
+            taskStatusRepository.save(newTaskStatus);
+            // return
+        } else
+            throw new TaskFailedException();
+
     }
 
 
@@ -331,7 +391,14 @@ public class SiteConfigurationServiceImpl implements SiteConfigurationService {
 
         // 1
         // Singola chiamata API con dimensione di ritorno maggiore per evitare piccole chiamate e ridurre l'overhead di rete
-        List<AuthorizedOperatorDTO> allOperatorsInfo = apiService.APICALL_getAuthOperatorsMacAddresses();
+        List<AuthorizedOperatorDTO> allOperatorsInfo;
+        try {
+            allOperatorsInfo = apiService.APICALL_getAuthOperatorsMacAddresses();
+        }
+        catch(Exception ex) {
+            ex.printStackTrace();
+            throw new RuntimeException();
+        }
 
 
         List<OperatorsConfigMessage> configurationMessage = new ArrayList<>();

@@ -65,8 +65,8 @@ public class WorkerServiceImpl implements WorkerService{
         Worker addedWorker = saveForType(worker);
 
         // chiamata all'API di LOGINMS per creare lo user per l'accesso al sistema
-        //String userID_created = apiService.APICALL_createUser(worker);
-        String userID_created = "carlo";
+        String userID_created = apiService.APICALL_createUser(worker);
+
 
         // chiamata all'API successfull
         // inserimento dello user ID appena creato

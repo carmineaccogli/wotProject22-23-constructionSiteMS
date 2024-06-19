@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
 public class WebClientConfiguration {
 
 
-    private final String API_LOGIN_MS = "http://localhost:8080/api/authentication";
+    private final String API_LOGIN_MS = "http://loginService:8080/api/authentication";
 
 
     @Bean

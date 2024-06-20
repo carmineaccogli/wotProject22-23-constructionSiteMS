@@ -65,7 +65,7 @@ public class APIServiceImpl implements APIService {
 
         //final String jwtToken = jwtUtilities.generateToken();
 
-        return createUserWebClient.post()
+        return createUserWebClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/users/macAddresses")
                         .build())
                 //.header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)

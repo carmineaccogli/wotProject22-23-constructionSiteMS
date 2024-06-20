@@ -3,10 +3,7 @@ package it.safesiteguard.ms.constructionsite_ssguard.mappers;
 import it.safesiteguard.ms.constructionsite_ssguard.domain.Beacon;
 import it.safesiteguard.ms.constructionsite_ssguard.domain.ConstructionMachineryType;
 import it.safesiteguard.ms.constructionsite_ssguard.domain.Machinery;
-import it.safesiteguard.ms.constructionsite_ssguard.dto.EnabledMachineryDTO;
-import it.safesiteguard.ms.constructionsite_ssguard.dto.MachineryBeaconOnlyDTO;
-import it.safesiteguard.ms.constructionsite_ssguard.dto.MachineryDTO;
-import it.safesiteguard.ms.constructionsite_ssguard.dto.MachineryRegistrationDTO;
+import it.safesiteguard.ms.constructionsite_ssguard.dto.*;
 import it.safesiteguard.ms.constructionsite_ssguard.exceptions.MachineryTypeNotFoundException;
 import it.safesiteguard.ms.constructionsite_ssguard.service.MachineryTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +59,20 @@ public class MachineryMapper {
         beacon.setSafetyDistance(beaconOnlyDTO.getSafetyDistance());
 
         return beacon;
+    }
+
+
+    public EquipmentOperatorMachineryDTO fromEnabledMachineriesForDriverToDTO(Machinery machinery) {
+        EquipmentOperatorMachineryDTO equipmentOperatorMachineryDTO = new EquipmentOperatorMachineryDTO();
+
+        equipmentOperatorMachineryDTO.setMachinery_ID(machinery.getId());
+        equipmentOperatorMachineryDTO.setMachinery_name(machinery.getName());
+        equipmentOperatorMachineryDTO.setMachinery_type(machinery.getTypeID()); // fatto apposta
+        equipmentOperatorMachineryDTO.setMachinery_serialNumber(machinery.getPlate().getSerialNumber());
+        equipmentOperatorMachineryDTO.setBoard_macBLE(machinery.getBoard_macBLE());
+
+
+        return equipmentOperatorMachineryDTO;
     }
 
     public EnabledMachineryDTO fromMachineryToEnabledMachineryDTO(Machinery machinery) {

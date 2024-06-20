@@ -16,7 +16,7 @@ public interface SiteConfigurationService {
 
     DailySiteConfiguration getLastSiteConfiguration();
 
-    Map<String,String> getTodayEnabledMachinesForDriver(String driverID);
+    List<Machinery> getTodayEnabledMachinesForDriver(String driverID);
 
     List<Machinery> getTodayEnabledMachines();
 }

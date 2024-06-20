@@ -82,27 +82,25 @@ public class DailyMappingRestController {
 
     @RequestMapping(value="/equipmentOperators/{driverID}", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<EquipmentOperatorMachineryDTO>> getEnabledMachinesForDriver(@PathVariable("driverID") String driverID) {
-        Map<String, String> todayEnabledMachinesByDriver = siteConfigurationService.getTodayEnabledMachinesForDriver(driverID);
+        List<Machinery> todayEnabledMachinesByDriver = siteConfigurationService.getTodayEnabledMachinesForDriver(driverID);
 
         if(todayEnabledMachinesByDriver.isEmpty())
             return ResponseEntity.noContent().build();
 
-        List<EquipmentOperatorMachineryDTO> allMachinesDTO = fromMappingToDTO(todayEnabledMachinesByDriver);
+        List<EquipmentOperatorMachineryDTO> allMachinesDTO = fromEnableMachinesForDriverToDTO(todayEnabledMachinesByDriver);
         return ResponseEntity.ok(allMachinesDTO);
     }
 
 
 
-    private List<EquipmentOperatorMachineryDTO> fromMappingToDTO(Map<String, String> allMachines) {
+    private List<EquipmentOperatorMachineryDTO> fromEnableMachinesForDriverToDTO(List<Machinery> allMachines) {
         List<EquipmentOperatorMachineryDTO> equipmentList = new ArrayList<>();
 
-        for (Map.Entry<String, String> entry : allMachines.entrySet()) {
-
-            EquipmentOperatorMachineryDTO equipmentDTO = new EquipmentOperatorMachineryDTO();
-            equipmentDTO.setMachinery_ID(entry.getKey());
-            equipmentDTO.setBoard_macBLE(entry.getValue());
+        for (Machinery machinery : allMachines) {
+            EquipmentOperatorMachineryDTO equipmentDTO = machineryMapper.fromEnabledMachineriesForDriverToDTO(machinery);
             equipmentList.add(equipmentDTO);
         }
+
         return equipmentList;
     }
 

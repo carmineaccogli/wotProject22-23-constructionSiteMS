@@ -115,13 +115,13 @@ public class SiteConfigurationServiceImpl implements SiteConfigurationService {
         return todayConfiguration.get();
     }
 
-    public Map<String,String> getTodayEnabledMachinesForDriver(String driverID) {
+    public List<Machinery> getTodayEnabledMachinesForDriver(String driverID) {
 
-        Map<String, String> idMac_map = new HashMap<>();
+        List<Machinery> enabledMachineries = new ArrayList<>();
 
         DailySiteConfiguration dailyConfiguration = getLastSiteConfiguration();
         if (dailyConfiguration == null)
-            return idMac_map;
+            return enabledMachineries;
 
         for(DailySiteConfiguration.ActiveMachines activeMachines: dailyConfiguration.getActiveMachines()) {
 
@@ -129,7 +129,16 @@ public class SiteConfigurationServiceImpl implements SiteConfigurationService {
                 if(operator.getId().equals(driverID)) {
                     try {
                         Machinery machinery = machineryService.findMachineryById(activeMachines.getMachineryID());
-                        idMac_map.put(activeMachines.getMachineryID(), machinery.getBoard_macBLE());
+                        ConstructionMachineryType type = machineryTypeService.getTypeByID(machinery.getTypeID());
+
+                        Machinery toAdd = new Machinery();
+                        toAdd.setId(activeMachines.getMachineryID());
+                        toAdd.setName(machinery.getName());
+                        toAdd.setTypeID(type.getName()); // in realtà è NAME
+                        toAdd.setPlate(machinery.getPlate());   // serve solo serial number
+                        toAdd.setBoard_macBLE(machinery.getBoard_macBLE());
+
+                        enabledMachineries.add(toAdd);
                         break;
                     } catch(Exception e) {
                         System.out.println("Exception in finding machinery's BLE mac address");
@@ -138,7 +147,7 @@ public class SiteConfigurationServiceImpl implements SiteConfigurationService {
                 }
             }
         }
-        return idMac_map;
+        return enabledMachineries;
     }
 
     public List<Machinery> getTodayEnabledMachines() {
@@ -216,7 +225,7 @@ public class SiteConfigurationServiceImpl implements SiteConfigurationService {
      *
      */
 
-    @Scheduled(cron = "0 */3 * * * *") // test ogni 3 minuti
+    @Scheduled(cron = "0 */30 * * * *") // test ogni 30 minuti
     //(cron="@midnight")
     @Retryable(
             retryFor = TaskFailedException.class,

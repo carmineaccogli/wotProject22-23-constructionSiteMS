@@ -2,54 +2,53 @@ package it.safesiteguard.ms.constructionsite_ssguard.dto;
 
 public class EquipmentOperatorMachineryDTO {
 
-    private String machinery_ID;
+    private String machineryID;
 
-    private String machinery_name;
+    private String machineryName;
 
-    private String machinery_type;
+    private String machineryType;
 
-    private String machinery_serialNumber;
+    private String machinerySerialNumber;
 
-    private String board_macBLE;
+    private String boardMacBLE;
 
-    public String getMachinery_ID() {
-        return machinery_ID;
+    public String getMachineryID() {
+        return machineryID;
     }
 
-    public void setMachinery_ID(String machinery_ID) {
-        this.machinery_ID = machinery_ID;
+    public void setMachineryID(String machineryID) {
+        this.machineryID = machineryID;
     }
 
-    public String getBoard_macBLE() {
-        return board_macBLE;
+    public String getMachineryName() {
+        return machineryName;
     }
 
-    public void setBoard_macBLE(String board_macBLE) {
-        this.board_macBLE = board_macBLE;
+    public void setMachineryName(String machineryName) {
+        this.machineryName = machineryName;
     }
 
-
-    public String getMachinery_name() {
-        return machinery_name;
+    public String getMachineryType() {
+        return machineryType;
     }
 
-    public void setMachinery_name(String machinery_name) {
-        this.machinery_name = machinery_name;
+    public void setMachineryType(String machineryType) {
+        this.machineryType = machineryType;
     }
 
-    public String getMachinery_type() {
-        return machinery_type;
+    public String getMachinerySerialNumber() {
+        return machinerySerialNumber;
     }
 
-    public void setMachinery_type(String machinery_type) {
-        this.machinery_type = machinery_type;
+    public void setMachinerySerialNumber(String machinerySerialNumber) {
+        this.machinerySerialNumber = machinerySerialNumber;
     }
 
-    public String getMachinery_serialNumber() {
-        return machinery_serialNumber;
+    public String getBoardMacBLE() {
+        return boardMacBLE;
     }
 
-    public void setMachinery_serialNumber(String machinery_serialNumber) {
-        this.machinery_serialNumber = machinery_serialNumber;
+    public void setBoardMacBLE(String boardMacBLE) {
+        this.boardMacBLE = boardMacBLE;
     }
 }

@@ -65,11 +65,11 @@ public class MachineryMapper {
     public EquipmentOperatorMachineryDTO fromEnabledMachineriesForDriverToDTO(Machinery machinery) {
         EquipmentOperatorMachineryDTO equipmentOperatorMachineryDTO = new EquipmentOperatorMachineryDTO();
 
-        equipmentOperatorMachineryDTO.setMachinery_ID(machinery.getId());
-        equipmentOperatorMachineryDTO.setMachinery_name(machinery.getName());
-        equipmentOperatorMachineryDTO.setMachinery_type(machinery.getTypeID()); // fatto apposta
-        equipmentOperatorMachineryDTO.setMachinery_serialNumber(machinery.getPlate().getSerialNumber());
-        equipmentOperatorMachineryDTO.setBoard_macBLE(machinery.getBoard_macBLE());
+        equipmentOperatorMachineryDTO.setMachineryID(machinery.getId());
+        equipmentOperatorMachineryDTO.setMachineryName(machinery.getName());
+        equipmentOperatorMachineryDTO.setMachineryType(machinery.getTypeID()); // fatto apposta
+        equipmentOperatorMachineryDTO.setMachinerySerialNumber(machinery.getPlate().getSerialNumber());
+        equipmentOperatorMachineryDTO.setBoardMacBLE(machinery.getBoard_macBLE());
 
 
         return equipmentOperatorMachineryDTO;

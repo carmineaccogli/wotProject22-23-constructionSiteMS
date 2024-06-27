@@ -1,5 +1,7 @@
 package it.safesiteguard.ms.constructionsite_ssguard.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class EquipmentOperatorMachineryDTO {
 
     private String machineryID;
@@ -11,6 +13,9 @@ public class EquipmentOperatorMachineryDTO {
     private String machinerySerialNumber;
 
     private String boardMacBLE;
+
+    @JsonProperty("isRemote")
+    private Boolean isRemote;
 
     public String getMachineryID() {
         return machineryID;
@@ -50,5 +55,15 @@ public class EquipmentOperatorMachineryDTO {
 
     public void setBoardMacBLE(String boardMacBLE) {
         this.boardMacBLE = boardMacBLE;
+    }
+
+    @JsonProperty("isRemote")
+    public Boolean getIsRemote() {
+        return isRemote;
+    }
+
+    @JsonProperty("isRemote")
+    public void setIsRemote(Boolean isRemote) {
+        this.isRemote = isRemote;
     }
 }

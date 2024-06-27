@@ -137,6 +137,7 @@ public class SiteConfigurationServiceImpl implements SiteConfigurationService {
                         toAdd.setTypeID(type.getName()); // in realtà è NAME
                         toAdd.setPlate(machinery.getPlate());   // serve solo serial number
                         toAdd.setBoard_macBLE(machinery.getBoard_macBLE());
+                        toAdd.setIsRemote(machinery.getIsRemote());
 
                         enabledMachineries.add(toAdd);
                         break;

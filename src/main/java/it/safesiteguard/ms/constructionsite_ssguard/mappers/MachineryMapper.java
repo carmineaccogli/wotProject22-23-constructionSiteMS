@@ -26,6 +26,7 @@ public class MachineryMapper {
         machinery.setSpec(machineryDTO.getSpecs());
         machinery.setTypeID(machineryDTO.getTypeName());
         machinery.setBoard_macBLE(machineryDTO.getBoard_macBLE());
+        machinery.setIsRemote(machineryDTO.getIsRemote());
 
         return machinery;
     }
@@ -47,6 +48,7 @@ public class MachineryMapper {
         machineryDTO.setPlate(machinery.getPlate());
         machineryDTO.setBeaconsAssociated(machinery.getBeaconsAssociated());
         machineryDTO.setBoard_macBLE(machinery.getBoard_macBLE());
+        machineryDTO.setIsRemote(machinery.getIsRemote());
 
         return machineryDTO;
     }
@@ -70,6 +72,7 @@ public class MachineryMapper {
         equipmentOperatorMachineryDTO.setMachineryType(machinery.getTypeID()); // fatto apposta
         equipmentOperatorMachineryDTO.setMachinerySerialNumber(machinery.getPlate().getSerialNumber());
         equipmentOperatorMachineryDTO.setBoardMacBLE(machinery.getBoard_macBLE());
+        equipmentOperatorMachineryDTO.setIsRemote(machinery.getIsRemote());
 
 
         return equipmentOperatorMachineryDTO;

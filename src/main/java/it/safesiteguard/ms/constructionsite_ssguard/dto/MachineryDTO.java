@@ -1,5 +1,6 @@
 package it.safesiteguard.ms.constructionsite_ssguard.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.safesiteguard.ms.constructionsite_ssguard.domain.Beacon;
 import it.safesiteguard.ms.constructionsite_ssguard.domain.Machinery;
 
@@ -23,6 +24,10 @@ public class MachineryDTO {
 
 
     private String board_macBLE;
+
+    @JsonProperty("isRemote")
+    private Boolean isRemote;
+
 
 
     public String getId() {
@@ -87,5 +92,15 @@ public class MachineryDTO {
 
     public void setBoard_macBLE(String board_macBLE) {
         this.board_macBLE = board_macBLE;
+    }
+
+    @JsonProperty("isRemote")
+    public Boolean getIsRemote() {
+        return isRemote;
+    }
+
+    @JsonProperty("isRemote")
+    public void setIsRemote(Boolean isRemote) {
+        this.isRemote = isRemote;
     }
 }

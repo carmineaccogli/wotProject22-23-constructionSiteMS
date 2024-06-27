@@ -1,5 +1,6 @@
 package it.safesiteguard.ms.constructionsite_ssguard.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.safesiteguard.ms.constructionsite_ssguard.domain.Machinery;
 import it.safesiteguard.ms.constructionsite_ssguard.validators.ValidIdentificationPlate;
 import it.safesiteguard.ms.constructionsite_ssguard.validators.ValidTechSpecifications;
@@ -28,6 +29,11 @@ public class MachineryRegistrationDTO {
     @NotBlank(message="{NotBlank.machinery.board_macBLE}")
     @Pattern(regexp = "^(([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2}))$", message = "Mac address format not valid")
     private String board_macBLE;
+
+    @NotNull(message = "{NotNull.machinery.isRemote}")
+    @JsonProperty("isRemote")
+    private Boolean isRemote;
+
 
 
     public String getName() {
@@ -69,5 +75,15 @@ public class MachineryRegistrationDTO {
 
     public void setBoard_macBLE(String board_macBLE) {
         this.board_macBLE = board_macBLE;
+    }
+
+    @JsonProperty("isRemote")
+    public Boolean getIsRemote() {
+        return isRemote;
+    }
+
+    @JsonProperty("isRemote")
+    public void setIsRemote(Boolean isRemote) {
+        this.isRemote = isRemote;
     }
 }

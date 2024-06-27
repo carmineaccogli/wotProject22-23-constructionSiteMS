@@ -29,7 +29,7 @@ public class Machinery {
 
     private String board_macBLE;
 
-
+    private Boolean isRemote;
 
 
 
@@ -98,6 +98,14 @@ public class Machinery {
         this.board_macBLE = board_macBLE;
     }
 
+    public Boolean getIsRemote() {
+        return isRemote;
+    }
+
+    public void setIsRemote(Boolean remote) {
+        isRemote = remote;
+    }
+
     public static class IdentificationPlate {
         private Integer yearOfManufacture;
         private String manufacturerName;
@@ -135,6 +143,8 @@ public class Machinery {
         public void setModel(String model) {
             this.model = model;
         }
+
+
     }
 
 

@@ -72,6 +72,17 @@ public class WorkersRestController {
         return ResponseEntity.ok(result);
     }
 
+
+    @RequestMapping(value="/user/{userID}", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<WorkerViewDTO> getWorkerByUserId(@PathVariable String userID) throws WorkerNotFoundException {
+
+        Worker worker = workerService.findWorkerByUserID(userID);
+
+        WorkerViewDTO result = workerMapper.fromWorkerTypeToViewDTO(worker);
+        return ResponseEntity.ok(result);
+    }
+
+
     @RequestMapping(value="", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<WorkerViewDTO>> getWorkersByType(@RequestParam(name="type", required = true) String type)  {
 

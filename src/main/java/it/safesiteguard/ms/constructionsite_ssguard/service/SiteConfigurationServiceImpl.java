@@ -185,10 +185,11 @@ public class SiteConfigurationServiceImpl implements SiteConfigurationService {
      *          2.1) Se si, significa che il responsabile della sicurezza ha già aggiunto nella giornata precedente la configurazione per il giorno corrente
      *                Iteriamo sui macchinari indicati nella configurazione e settiamo il loro campo "status"="ACTIVE"
      *          2.2) Invio configurazione operatori al topic MQTT di configurazione dei macchinari
+     *     Se la configurazione non è presente, ritorno null
      * @return
      */
 
-    private boolean execute_updateTask() {
+    private Boolean execute_updateTask() {
         // 1
         resetMachineriesState();
 
@@ -205,7 +206,7 @@ public class SiteConfigurationServiceImpl implements SiteConfigurationService {
                 return false;
             }
         }
-        return false;
+        return null;
     }
 
 
@@ -216,10 +217,10 @@ public class SiteConfigurationServiceImpl implements SiteConfigurationService {
      *  2) Se esiste:
      *      2.1) Controllo se la data di esecuzione (che se settata indica una esecuzione eseguita correttamente)
      *           è uguale a quella di oggi: il task è stato già eseguito per oggi
-     *      2.2) Eseguo il task di applicazione della configurazione
+     *      2.2) Eseguo il task di applicazione della configurazione e controllo che la configurazione sia presente (boolean != null)
      *      2.3) Se eseguito correttamente, aggiorno la data di ultima corretta esecuzione
      *  3) Se non esiste (è la prima volta in assoluto che il task viene eseguito):
-     *      3.1) Eseguo il task di update
+     *      3.1) Eseguo il task di update controllando che la configurazione fosse presente (boolean != null)
      *      3.2) Creo il documento per registrare l'avvenuta esecuzione
      *  Notare che in tutti i casi di errore, viene sollevata una eccezione specifica che permette il retry
      *  , secondo le policy settate, del task di scheduling
@@ -247,7 +248,9 @@ public class SiteConfigurationServiceImpl implements SiteConfigurationService {
                 return;
 
             // 2.2
-            boolean updateStatus = execute_updateTask();
+            Boolean updateStatus = execute_updateTask();
+            if(updateStatus == null)
+                return;
 
             // 2.3
             if(updateStatus) {
@@ -260,7 +263,12 @@ public class SiteConfigurationServiceImpl implements SiteConfigurationService {
         }
 
         // 3
-        boolean updateStatus = execute_updateTask();
+        Boolean updateStatus = execute_updateTask();
+        if(updateStatus == null) {
+            System.out.println("QUI NON CI STA NESSUNO :|");
+            return;
+        }
+
 
         // 3.1
         if(updateStatus) {

@@ -10,6 +10,7 @@ import org.springframework.web.reactive.function.client.WebClientRequestExceptio
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface WorkerService {
 
@@ -24,4 +25,6 @@ public interface WorkerService {
     List<Worker> filterWorkersByType(String type);
 
     List<Worker> getEligibleOperatorsByType(String machineryTypeID) throws MachineryTypeNotFoundException;
+
+    Worker findWorkerByUserID(String userID) throws WorkerNotFoundException;
 }

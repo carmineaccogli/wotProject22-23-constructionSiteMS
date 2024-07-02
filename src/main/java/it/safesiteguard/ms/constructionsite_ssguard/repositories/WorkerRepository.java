@@ -14,6 +14,8 @@ public interface WorkerRepository extends MongoRepository<Worker, String> {
 
     Optional<Worker> findWorkerById(String workerID);
 
+    Optional<Worker> findWorkerByUserID(String userID);
+
     @Query(value="{'type': {$regex:  '^?0$', $options:  'i'}}" )
     List<Worker> findWorkersByType(String typeName);
 

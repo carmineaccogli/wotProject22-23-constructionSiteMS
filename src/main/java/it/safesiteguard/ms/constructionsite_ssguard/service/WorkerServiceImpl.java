@@ -50,6 +50,17 @@ public class WorkerServiceImpl implements WorkerService{
         return worker;
     }
 
+    public Worker findWorkerByUserID(String userID) throws WorkerNotFoundException {
+        Worker worker = null;
+
+        Optional<Worker> optWorker = workerRepository.findWorkerByUserID(userID);
+        if(!optWorker.isPresent())
+            throw new WorkerNotFoundException();
+
+        worker = optWorker.get();
+        return worker;
+    }
+
     /**
      *
      * @param worker

@@ -19,4 +19,5 @@ public interface SiteConfigurationService {
     List<Machinery> getTodayEnabledMachinesForDriver(String driverID);
 
     List<Machinery> getTodayEnabledMachines();
+
 }

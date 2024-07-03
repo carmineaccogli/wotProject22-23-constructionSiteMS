@@ -18,7 +18,7 @@ public class WorkerViewDTO {
     private String email;
     private String userID;
     private String type;
-    private LocalDate dateOfBirth;
+    private String dateOfBirth;
 
     private String generalLicense;
 
@@ -81,11 +81,11 @@ public class WorkerViewDTO {
         this.type = type;
     }
 
-    public LocalDate getDateOfBirth() {
+    public String getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(LocalDate dateOfBirth) {
+    public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 

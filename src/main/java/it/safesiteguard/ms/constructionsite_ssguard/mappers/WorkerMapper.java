@@ -23,7 +23,7 @@ public class WorkerMapper {
         workerViewDTO.setSurname(worker.getSurname());
         workerViewDTO.setSsn(worker.getSsn());
         workerViewDTO.setEmail(worker.getEmail());
-        workerViewDTO.setDateOfBirth(worker.getDateOfBirth());
+        workerViewDTO.setDateOfBirth(worker.getDateOfBirth().toString());
 
         if(worker.getType().equals(Worker.Type.EQUIPMENT_OPERATOR)) {
             workerViewDTO.setGeneralLicense(((EquipmentOperator) worker).getGeneralLicence());

@@ -35,7 +35,7 @@ public class SiteConfigurationMapper {
         DailyMappingViewDTO dailyMappingViewDTO = new DailyMappingViewDTO();
 
         dailyMappingViewDTO.setId(siteConfiguration.getId());
-        dailyMappingViewDTO.setDate(siteConfiguration.getDate());
+        dailyMappingViewDTO.setDate(siteConfiguration.getDate().toString());
         dailyMappingViewDTO.setActiveMachines(siteConfiguration.getActiveMachines());
 
         return dailyMappingViewDTO;

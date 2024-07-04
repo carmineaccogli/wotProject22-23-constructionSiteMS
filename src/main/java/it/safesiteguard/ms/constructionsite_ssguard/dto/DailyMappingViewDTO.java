@@ -11,7 +11,7 @@ public class DailyMappingViewDTO {
 
     private String id;
 
-    private LocalDate date;
+    private String date;
 
     private List<DailySiteConfiguration.ActiveMachines> activeMachines;
 
@@ -24,11 +24,11 @@ public class DailyMappingViewDTO {
         this.id = id;
     }
 
-    public LocalDate getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

@@ -25,7 +25,7 @@ public class MachineryMapper {
         machinery.setPlate(machineryDTO.getIdentificationPlate());
         machinery.setSpec(machineryDTO.getSpecs());
         machinery.setTypeID(machineryDTO.getTypeName());
-        machinery.setBoard_macBLE(machineryDTO.getBoard_macBLE());
+        machinery.setBoard_macBLE(machineryDTO.getBoard_macBLE().toUpperCase());
         machinery.setIsRemote(machineryDTO.getIsRemote());
 
         return machinery;
@@ -57,7 +57,7 @@ public class MachineryMapper {
         Beacon beacon = new Beacon();
 
         beacon.setPosition(beaconOnlyDTO.getPosition());
-        beacon.setMacAddress(beaconOnlyDTO.getMacAddress());
+        beacon.setMacAddress(beaconOnlyDTO.getMacAddress().toUpperCase());
         beacon.setSafetyDistance(beaconOnlyDTO.getSafetyDistance());
 
         return beacon;

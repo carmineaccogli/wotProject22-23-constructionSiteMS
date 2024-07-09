@@ -20,7 +20,7 @@ public class WorkerViewDTO {
     private String type;
     private String dateOfBirth;
 
-    private String generalLicense;
+    private String generalLicence;
 
     private List<String> specificLicences;
 
@@ -89,12 +89,12 @@ public class WorkerViewDTO {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public String getGeneralLicense() {
-        return generalLicense;
+    public String getGeneralLicence() {
+        return generalLicence;
     }
 
-    public void setGeneralLicense(String generalLicense) {
-        this.generalLicense = generalLicense;
+    public void setGeneralLicence(String generalLicence) {
+        this.generalLicence = generalLicence;
     }
 
     public List<String> getSpecificLicences() {

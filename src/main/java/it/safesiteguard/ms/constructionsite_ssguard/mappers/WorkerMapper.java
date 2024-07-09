@@ -26,7 +26,7 @@ public class WorkerMapper {
         workerViewDTO.setDateOfBirth(worker.getDateOfBirth().toString());
 
         if(worker.getType().equals(Worker.Type.EQUIPMENT_OPERATOR)) {
-            workerViewDTO.setGeneralLicense(((EquipmentOperator) worker).getGeneralLicence());
+            workerViewDTO.setGeneralLicence(((EquipmentOperator) worker).getGeneralLicence());
             workerViewDTO.setSpecificLicences(((EquipmentOperator) worker).getSpecificLicences());
         }
 

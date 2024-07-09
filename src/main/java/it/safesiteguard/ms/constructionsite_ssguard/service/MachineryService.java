@@ -3,6 +3,7 @@ package it.safesiteguard.ms.constructionsite_ssguard.service;
 import it.safesiteguard.ms.constructionsite_ssguard.domain.Beacon;
 import it.safesiteguard.ms.constructionsite_ssguard.domain.Machinery;
 import it.safesiteguard.ms.constructionsite_ssguard.exceptions.BeaconAlreadyAssociatedException;
+import it.safesiteguard.ms.constructionsite_ssguard.exceptions.BeaconNotFoundException;
 import it.safesiteguard.ms.constructionsite_ssguard.exceptions.MachineryNotFoundException;
 import it.safesiteguard.ms.constructionsite_ssguard.exceptions.MachineryTypeNotFoundException;
 
@@ -21,4 +22,6 @@ public interface MachineryService {
     void updateMachineryInfo(Machinery machinery);
 
     List<Machinery> findMachineriesByState(Machinery.State state);
+
+    void deleteBeaconFromMachinery(String machineryID, String beaconID) throws MachineryNotFoundException, BeaconNotFoundException;
 }

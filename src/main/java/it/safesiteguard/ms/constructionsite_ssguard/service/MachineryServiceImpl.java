@@ -5,10 +5,7 @@ import it.safesiteguard.ms.constructionsite_ssguard.domain.Beacon;
 import it.safesiteguard.ms.constructionsite_ssguard.domain.ConstructionMachineryType;
 import it.safesiteguard.ms.constructionsite_ssguard.domain.Machinery;
 import it.safesiteguard.ms.constructionsite_ssguard.domain.Worker;
-import it.safesiteguard.ms.constructionsite_ssguard.exceptions.BeaconAlreadyAssociatedException;
-import it.safesiteguard.ms.constructionsite_ssguard.exceptions.MachineryNotFoundException;
-import it.safesiteguard.ms.constructionsite_ssguard.exceptions.MachineryTypeNotFoundException;
-import it.safesiteguard.ms.constructionsite_ssguard.exceptions.WorkerNotFoundException;
+import it.safesiteguard.ms.constructionsite_ssguard.exceptions.*;
 import it.safesiteguard.ms.constructionsite_ssguard.repositories.MachineryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -90,7 +87,7 @@ public class MachineryServiceImpl implements MachineryService {
         }
 
         // 3
-        beaconToAdd.setId("BEACON-"+(list_beacons.size() + 1)+"-"+beaconToAdd.getPosition().toLowerCase());
+        beaconToAdd.setId("BEACON-"+(list_beacons.size() + 1)+"-"+beaconToAdd.getPosition().toLowerCase().replace(" ", "_"));
 
         // 4
         list_beacons.add(beaconToAdd);
@@ -102,6 +99,31 @@ public class MachineryServiceImpl implements MachineryService {
             machinery.setState(Machinery.State.INACTIVE);
 
         machineryRepository.save(machinery);
+    }
+
+    public void deleteBeaconFromMachinery(String machineryID, String beaconID) throws MachineryNotFoundException, BeaconNotFoundException {
+
+        Machinery machinery = findMachineryById(machineryID);
+        List<Beacon> list_beacons = machinery.getBeaconsAssociated();
+
+        if(list_beacons.isEmpty())
+            throw new BeaconNotFoundException();
+
+        for(Beacon beacon: list_beacons) {
+
+            if(beacon.getId().equalsIgnoreCase(beaconID)) {
+                list_beacons.remove(beacon);
+                machinery.setBeaconsAssociated(list_beacons);
+
+                if(list_beacons.isEmpty())
+                    machinery.setState(Machinery.State.TO_CONFIGURE);
+
+                machineryRepository.save(machinery);
+                return;
+            }
+        }
+
+        throw  new BeaconNotFoundException();
     }
 
 }

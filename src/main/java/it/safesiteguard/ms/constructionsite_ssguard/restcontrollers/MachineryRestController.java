@@ -6,10 +6,7 @@ import it.safesiteguard.ms.constructionsite_ssguard.domain.ConstructionMachinery
 import it.safesiteguard.ms.constructionsite_ssguard.domain.Machinery;
 import it.safesiteguard.ms.constructionsite_ssguard.domain.Worker;
 import it.safesiteguard.ms.constructionsite_ssguard.dto.*;
-import it.safesiteguard.ms.constructionsite_ssguard.exceptions.BeaconAlreadyAssociatedException;
-import it.safesiteguard.ms.constructionsite_ssguard.exceptions.MachineryNotFoundException;
-import it.safesiteguard.ms.constructionsite_ssguard.exceptions.MachineryTypeNotFoundException;
-import it.safesiteguard.ms.constructionsite_ssguard.exceptions.WorkerNotFoundException;
+import it.safesiteguard.ms.constructionsite_ssguard.exceptions.*;
 import it.safesiteguard.ms.constructionsite_ssguard.mappers.MachineryMapper;
 import it.safesiteguard.ms.constructionsite_ssguard.service.MachineryService;
 import jakarta.validation.Valid;
@@ -78,6 +75,21 @@ public class MachineryRestController {
         machineryService.addBeaconToMachinery(machineryID, beaconToAdd);
         return ResponseEntity.noContent().build();
     }
+
+    @RequestMapping(value="/{machineryID}/beacons/{beaconID}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> removeBeaconFromMachinery(@PathVariable("machineryID") String machineryID,
+                                                       @PathVariable("beaconID") String beaconID) throws MachineryNotFoundException, BeaconNotFoundException {
+
+        machineryService.deleteBeaconFromMachinery(machineryID, beaconID);
+        return ResponseEntity.noContent().build();
+    }
+
+    /*@RequestMapping(value="/alarms", method=RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ResponseDTO> sendGeneralAlarms(@RequestBody GeneralAlarmDTO generalAlarmDTO) {
+
+
+
+    }*/
 
 
 

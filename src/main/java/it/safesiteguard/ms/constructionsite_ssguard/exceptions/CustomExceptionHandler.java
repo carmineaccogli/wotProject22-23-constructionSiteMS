@@ -96,6 +96,17 @@ public class CustomExceptionHandler {
                 ));
     }
 
+    @ExceptionHandler(BeaconNotFoundException.class)
+    public ResponseEntity<Object> beaconNotFoundHandler(BeaconNotFoundException ex) {
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ExceptionDTO(
+                        3,
+                        BeaconNotFoundException.class.getSimpleName(),
+                        "Beacon not found"
+                ));
+    }
+
     @ExceptionHandler(MappingAlreadyExistsException.class)
     public ResponseEntity<Object> mappingAlreadyExistsHandler(MappingAlreadyExistsException ex) {
 

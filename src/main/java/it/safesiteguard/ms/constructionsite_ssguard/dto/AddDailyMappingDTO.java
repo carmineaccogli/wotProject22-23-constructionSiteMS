@@ -1,8 +1,7 @@
 package it.safesiteguard.ms.constructionsite_ssguard.dto;
 
-import com.mongodb.lang.NonNull;
 import it.safesiteguard.ms.constructionsite_ssguard.domain.DailySiteConfiguration;
-import it.safesiteguard.ms.constructionsite_ssguard.validators.ValidActiveMachines;
+import it.safesiteguard.ms.constructionsite_ssguard.validators.ValidActiveMachineries;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
@@ -14,8 +13,8 @@ public class AddDailyMappingDTO {
     private LocalDate date;
 
     @NotNull(message = "{NotNull.mapping.activeMachines}")
-    @ValidActiveMachines
-    private List<DailySiteConfiguration.ActiveMachines> activeMachines;
+    @ValidActiveMachineries
+    private List<DailySiteConfiguration.ActiveMachines> activeMachineries;
 
 
 
@@ -27,11 +26,11 @@ public class AddDailyMappingDTO {
         this.date = date;
     }
 
-    public List<DailySiteConfiguration.ActiveMachines> getActiveMachines() {
-        return activeMachines;
+    public List<DailySiteConfiguration.ActiveMachines> getActiveMachineries() {
+        return activeMachineries;
     }
 
-    public void setActiveMachines(List<DailySiteConfiguration.ActiveMachines> activeMachines) {
-        this.activeMachines = activeMachines;
+    public void setActiveMachineries(List<DailySiteConfiguration.ActiveMachines> activeMachineries) {
+        this.activeMachineries = activeMachineries;
     }
 }

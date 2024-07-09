@@ -25,7 +25,7 @@ public class SiteConfigurationMapper {
         DailySiteConfiguration siteConfiguration = new DailySiteConfiguration();
 
         siteConfiguration.setDate(addDailyMappingDTO.getDate());
-        siteConfiguration.setActiveMachines(addDailyMappingDTO.getActiveMachines());
+        siteConfiguration.setActiveMachineries(addDailyMappingDTO.getActiveMachineries());
 
         return siteConfiguration;
     }
@@ -36,7 +36,7 @@ public class SiteConfigurationMapper {
 
         dailyMappingViewDTO.setId(siteConfiguration.getId());
         dailyMappingViewDTO.setDate(siteConfiguration.getDate().toString());
-        dailyMappingViewDTO.setActiveMachines(siteConfiguration.getActiveMachines());
+        dailyMappingViewDTO.setActiveMachineries(siteConfiguration.getActiveMachineries());
 
         return dailyMappingViewDTO;
     }

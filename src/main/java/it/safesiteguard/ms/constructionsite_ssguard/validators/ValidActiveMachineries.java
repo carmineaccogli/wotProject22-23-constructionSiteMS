@@ -5,13 +5,13 @@ import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
 
-@Constraint(validatedBy = ValidActiveMachinesImpl.class)
+@Constraint(validatedBy = ValidActiveMachineriesImpl.class)
 @Documented
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ValidActiveMachines {
+public @interface ValidActiveMachineries {
 
-    String message() default "Invalid active machines format";
+    String message() default "Invalid active machineries format";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

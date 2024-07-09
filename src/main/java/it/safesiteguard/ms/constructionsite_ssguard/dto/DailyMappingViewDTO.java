@@ -13,7 +13,7 @@ public class DailyMappingViewDTO {
 
     private String date;
 
-    private List<DailySiteConfiguration.ActiveMachines> activeMachines;
+    private List<DailySiteConfiguration.ActiveMachines> activeMachineries;
 
 
     public String getId() {
@@ -32,11 +32,11 @@ public class DailyMappingViewDTO {
         this.date = date;
     }
 
-    public List<DailySiteConfiguration.ActiveMachines> getActiveMachines() {
-        return activeMachines;
+    public List<DailySiteConfiguration.ActiveMachines> getActiveMachineries() {
+        return activeMachineries;
     }
 
-    public void setActiveMachines(List<DailySiteConfiguration.ActiveMachines> activeMachines) {
-        this.activeMachines = activeMachines;
+    public void setActiveMachineries(List<DailySiteConfiguration.ActiveMachines> activeMachineries) {
+        this.activeMachineries = activeMachineries;
     }
 }

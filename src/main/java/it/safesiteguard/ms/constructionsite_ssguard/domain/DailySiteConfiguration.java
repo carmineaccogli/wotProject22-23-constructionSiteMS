@@ -21,7 +21,7 @@ public class DailySiteConfiguration {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
 
-    private List<ActiveMachines> activeMachines;
+    private List<ActiveMachines> activeMachineries;
 
 
 
@@ -30,6 +30,7 @@ public class DailySiteConfiguration {
         private String machineryID;
         private String machineryName;
 
+        private String machineryTypeID;
         private String machineryType;
         private String machineryLicenceRequired;
 
@@ -67,6 +68,14 @@ public class DailySiteConfiguration {
 
         public void setMachineryLicenceRequired(String machineryLicenceRequired) {
             this.machineryLicenceRequired = machineryLicenceRequired;
+        }
+
+        public String getMachineryTypeID() {
+            return machineryTypeID;
+        }
+
+        public void setMachineryTypeID(String machineryTypeID) {
+            this.machineryTypeID = machineryTypeID;
         }
 
         public List<InfoOperator> getInfoOperator() {
@@ -117,11 +126,11 @@ public class DailySiteConfiguration {
         this.date = date;
     }
 
-    public List<ActiveMachines> getActiveMachines() {
-        return activeMachines;
+    public List<ActiveMachines> getActiveMachineries() {
+        return activeMachineries;
     }
 
-    public void setActiveMachines(List<ActiveMachines> activeMachines) {
-        this.activeMachines = activeMachines;
+    public void setActiveMachineries(List<ActiveMachines> activeMachineries) {
+        this.activeMachineries = activeMachineries;
     }
 }

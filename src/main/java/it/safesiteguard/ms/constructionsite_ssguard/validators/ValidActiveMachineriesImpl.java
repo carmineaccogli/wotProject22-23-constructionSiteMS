@@ -6,7 +6,7 @@ import jakarta.validation.ConstraintValidatorContext;
 
 import java.util.List;
 
-public class ValidActiveMachinesImpl implements ConstraintValidator<ValidActiveMachines, List<DailySiteConfiguration.ActiveMachines>> {
+public class ValidActiveMachineriesImpl implements ConstraintValidator<ValidActiveMachineries, List<DailySiteConfiguration.ActiveMachines>> {
 
     @Override
     public boolean isValid(List<DailySiteConfiguration.ActiveMachines> value, ConstraintValidatorContext context) {

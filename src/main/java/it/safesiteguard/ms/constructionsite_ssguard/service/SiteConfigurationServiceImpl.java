@@ -63,12 +63,12 @@ public class SiteConfigurationServiceImpl implements SiteConfigurationService {
      * @throws DailyMappingDateNotValidException
      * @throws MappingAlreadyExistsException
      */
-    public String addDailyMapping(DailySiteConfiguration siteConfiguration) throws InvalidDailyMappingException, DailyMappingDateNotValidException, MappingAlreadyExistsException, MqttException {
+    public String addDailyMapping(DailySiteConfiguration siteConfiguration) throws InvalidDailyMappingException,
+            DailyMappingDateNotValidException, MappingAlreadyExistsException, MqttException {
 
         // 1
         LocalDate mappingDate = siteConfiguration.getDate();
         checkValidDate(mappingDate);
-
         // 2
         boolean mappingExists = siteConfigurationRepository.existsDailySiteConfigurationByDate(mappingDate);
         if (mappingExists)
@@ -76,20 +76,17 @@ public class SiteConfigurationServiceImpl implements SiteConfigurationService {
 
         // 3
         completeObjectInformation(siteConfiguration);
-
         // 4
         DailySiteConfiguration addedConfiguration = siteConfigurationRepository.save(siteConfiguration);
-
         // 5
-        /*if(mappingDate.equals(LocalDate.now())) {
+        if(mappingDate.equals(LocalDate.now())) {
             // 5.1
             resetMachineriesState();
             //5.2
-            updateMachineriesState(siteConfiguration.getActiveMachines());
+            updateMachineriesState(siteConfiguration.getActiveMachineries());
             // 5.3
-            sendAuthOperatorsInfo_ViaMQTT(siteConfiguration.getActiveMachines());
-        }*/
-
+            sendAuthOperatorsInfo_ViaMQTT(siteConfiguration.getActiveMachineries());
+        }
         return addedConfiguration.getId();
     }
 
@@ -120,10 +117,10 @@ public class SiteConfigurationServiceImpl implements SiteConfigurationService {
         List<Machinery> enabledMachineries = new ArrayList<>();
 
         DailySiteConfiguration dailyConfiguration = getLastSiteConfiguration();
-        if (dailyConfiguration == null)
+        if (dailyConfiguration == null || !dailyConfiguration.getDate().equals(LocalDate.now()))
             return enabledMachineries;
 
-        for(DailySiteConfiguration.ActiveMachines activeMachines: dailyConfiguration.getActiveMachines()) {
+        for(DailySiteConfiguration.ActiveMachines activeMachines: dailyConfiguration.getActiveMachineries()) {
 
             for(DailySiteConfiguration.InfoOperator operator: activeMachines.getInfoOperator()) {
                 if(operator.getId().equals(driverID)) {
@@ -156,10 +153,10 @@ public class SiteConfigurationServiceImpl implements SiteConfigurationService {
         List<Machinery> enabledMachines = new ArrayList<>();
 
         DailySiteConfiguration dailyConfiguration = getLastSiteConfiguration();
-        if(dailyConfiguration == null)
+        if(dailyConfiguration == null || !dailyConfiguration.getDate().equals(LocalDate.now()))
             return enabledMachines;
 
-         for(DailySiteConfiguration.ActiveMachines activeMachine: dailyConfiguration.getActiveMachines()) {
+         for(DailySiteConfiguration.ActiveMachines activeMachine: dailyConfiguration.getActiveMachineries()) {
 
              Machinery machineryToAdd = new Machinery();
              machineryToAdd.setId(activeMachine.getMachineryID());
@@ -196,10 +193,10 @@ public class SiteConfigurationServiceImpl implements SiteConfigurationService {
         // 2
         Optional<DailySiteConfiguration> todayConfiguration = siteConfigurationRepository.findByDate(LocalDate.now());
         if(todayConfiguration.isPresent()) {
-            updateMachineriesState(todayConfiguration.get().getActiveMachines());
+            updateMachineriesState(todayConfiguration.get().getActiveMachineries());
 
             try {
-                sendAuthOperatorsInfo_ViaMQTT(todayConfiguration.get().getActiveMachines());
+                sendAuthOperatorsInfo_ViaMQTT(todayConfiguration.get().getActiveMachineries());
                 return true;
             }catch (Exception ex) {
                 ex.printStackTrace();
@@ -337,7 +334,7 @@ public class SiteConfigurationServiceImpl implements SiteConfigurationService {
         List<DailySiteConfiguration.ActiveMachines> extendedActiveMachines = new ArrayList<>();
 
         //2
-        for(DailySiteConfiguration.ActiveMachines activeMachine :siteConfiguration.getActiveMachines()) {
+        for(DailySiteConfiguration.ActiveMachines activeMachine :siteConfiguration.getActiveMachineries()) {
 
             DailySiteConfiguration.ActiveMachines newActiveMachine = new DailySiteConfiguration.ActiveMachines();
 
@@ -349,6 +346,7 @@ public class SiteConfigurationServiceImpl implements SiteConfigurationService {
                 Machinery machinery = machineryService.findMachineryById(activeMachine.getMachineryID());
                 ConstructionMachineryType machineryType = machineryTypeService.getTypeByID(machinery.getTypeID());
                 newActiveMachine.setMachineryName(machinery.getName());
+                newActiveMachine.setMachineryTypeID(machineryType.getId());
                 newActiveMachine.setMachineryType(machineryType.getName());
 
                 // 2.3
@@ -393,7 +391,7 @@ public class SiteConfigurationServiceImpl implements SiteConfigurationService {
             extendedActiveMachines.add(newActiveMachine);
         }
         // 3
-        siteConfiguration.setActiveMachines(extendedActiveMachines);
+        siteConfiguration.setActiveMachineries(extendedActiveMachines);
     }
 
     /** Gestione dell'invio degli indirizzi MAC relativi agli operatori autorizzati

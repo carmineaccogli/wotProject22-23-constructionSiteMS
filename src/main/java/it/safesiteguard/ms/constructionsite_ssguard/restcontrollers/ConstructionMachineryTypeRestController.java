@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ public class ConstructionMachineryTypeRestController {
     private MachineryTypeMapper machineryTypeMapper;
 
 
+    @PreAuthorize("hasAnyRole('ROLE_Admin','ROLE_Safety_Manager')")
     @RequestMapping(value="/", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<MachineryTypeDTO>> getAllMachineryTypes() {
         List<ConstructionMachineryType> allMachineryTypes = machineryTypeService.getAll();
@@ -45,6 +47,7 @@ public class ConstructionMachineryTypeRestController {
         return ResponseEntity.ok(allTypesDTO);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_Admin','ROLE_Safety_Manager')")
     @RequestMapping(value="", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<MachineryTypeDTO>> getMachineryTypesWithSpecificLicence(@RequestParam(value="specificLicence", required = true) boolean specificLicence ) {
         List<ConstructionMachineryType> machineryTypeFound = machineryTypeService.getMachineryTypesBySpecificLicence(specificLicence);
@@ -56,6 +59,7 @@ public class ConstructionMachineryTypeRestController {
         return ResponseEntity.ok(typesDTO);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_Admin','ROLE_Safety_Manager')")
     @RequestMapping(value="/", method=RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseDTO> addNewType(@Valid @RequestBody MachineryTypeDTO machineryTypeDTO) throws DuplicateKeyException {
 

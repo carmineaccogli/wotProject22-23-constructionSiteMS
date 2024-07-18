@@ -36,7 +36,7 @@ public class WorkersRestController {
 
 
 
-    @PreAuthorize("hasAnyRole('ROLE_Admin','ROLE_Safety_Manager')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SAFETY_MANAGER')")
     @RequestMapping(value="/", method=RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseDTO> workerRegistration(@Valid @RequestBody WorkerRegistrationDTO workerRegistrationDTO) throws WorkerTypeNotValidException, HttpMessageNotReadableException {
 
@@ -53,7 +53,7 @@ public class WorkersRestController {
         );
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_Admin','ROLE_Safety_Manager')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SAFETY_MANAGER')")
     @RequestMapping(value="/", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<WorkerViewDTO>> getAllWorkers() {
 
@@ -66,7 +66,7 @@ public class WorkersRestController {
         return ResponseEntity.ok(allWorkersDTO);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_Admin','ROLE_Safety_Manager')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SAFETY_MANAGER')")
     @RequestMapping(value="/{workerID}", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<WorkerViewDTO> getWorkerById(@PathVariable("workerID")String workerID) throws WorkerNotFoundException {
 
@@ -77,7 +77,7 @@ public class WorkersRestController {
     }
 
 
-    @PreAuthorize("hasAnyRole('ROLE_Admin','ROLE_Ground_Worker', 'ROLE_Equipment_Operator')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_GROUND_WORKER', 'ROLE_EQUIPMENT_OPERATOR')")
     @RequestMapping(value="/user/{userID}", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<WorkerViewDTO> getWorkerByUserId(@PathVariable String userID) throws WorkerNotFoundException {
 
@@ -87,7 +87,7 @@ public class WorkersRestController {
         return ResponseEntity.ok(result);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_Admin','ROLE_Safety_Manager')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SAFETY_MANAGER')")
     @RequestMapping(value="", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<WorkerViewDTO>> getWorkersByType(@RequestParam(name="type", required = true) String type)  {
 
@@ -99,7 +99,7 @@ public class WorkersRestController {
         return ResponseEntity.ok(allWorkersDTO);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_Admin','ROLE_Safety_Manager')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SAFETY_MANAGER')")
     @RequestMapping(value="/equipment_operators/{machineryTypeID}/eligible", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<WorkerViewDTO>> getDriversForType(@PathVariable("machineryTypeID") String machineryTypeID) throws MachineryTypeNotFoundException {
 

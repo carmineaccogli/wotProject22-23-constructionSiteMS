@@ -35,7 +35,7 @@ public class MachineryRestController {
     @Autowired
     private MachineryService machineryService;
 
-    @PreAuthorize("hasAnyRole('ROLE_Admin','ROLE_Safety_Manager')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SAFETY_MANAGER')")
     @RequestMapping(value="/", method= RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseDTO> machineryRegistration(@Valid @RequestBody MachineryRegistrationDTO machineryRegistrationDTO) throws MachineryTypeNotFoundException {
 
@@ -52,7 +52,7 @@ public class MachineryRestController {
         );
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_Admin','ROLE_Safety_Manager', 'ROLE_Control_Board')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SAFETY_MANAGER', 'ROLE_CONTROL_BOARD')")
     @RequestMapping(value="/", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<MachineryDTO>> getAllMachineries() {
         List<Machinery> allMachineries = machineryService.getAll();
@@ -64,7 +64,7 @@ public class MachineryRestController {
         return ResponseEntity.ok(allMachineriesDTO);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_Admin','ROLE_Safety_Manager')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SAFETY_MANAGER')")
     @RequestMapping(value="/{machineryID}", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MachineryDTO> getMachineryByID(@PathVariable("machineryID")String machineryID) throws MachineryNotFoundException {
 
@@ -74,7 +74,7 @@ public class MachineryRestController {
         return ResponseEntity.ok(result);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_Admin','ROLE_Safety_Manager')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SAFETY_MANAGER')")
     @RequestMapping(value="/{machineryID}/beacons", method=RequestMethod.PATCH, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> addBeaconToMachinery(@PathVariable("machineryID") String machineryID, @Valid @RequestBody MachineryBeaconOnlyDTO machineryBeaconOnlyDTO) throws MachineryNotFoundException, BeaconAlreadyAssociatedException {
 
@@ -83,7 +83,7 @@ public class MachineryRestController {
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_Admin','ROLE_Safety_Manager')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SAFETY_MANAGER')")
     @RequestMapping(value="/{machineryID}/beacons/{beaconID}", method = RequestMethod.DELETE)
     public ResponseEntity<?> removeBeaconFromMachinery(@PathVariable("machineryID") String machineryID,
                                                        @PathVariable("beaconID") String beaconID) throws MachineryNotFoundException, BeaconNotFoundException {
@@ -92,7 +92,7 @@ public class MachineryRestController {
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_Admin','ROLE_Safety_Manager')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SAFETY_MANAGER')")
     @RequestMapping(value="/general_alarm", method=RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> sendGeneralAlarms(@Valid @RequestBody GeneralAlarmDTO generalAlarmDTO) {
 

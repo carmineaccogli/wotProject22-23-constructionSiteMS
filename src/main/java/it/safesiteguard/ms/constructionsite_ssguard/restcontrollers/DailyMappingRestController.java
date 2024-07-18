@@ -42,7 +42,7 @@ public class DailyMappingRestController {
     private MachineryMapper machineryMapper;
 
 
-    @PreAuthorize("hasAnyRole('ROLE_Admin','ROLE_Safety_Manager')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SAFETY_MANAGER')")
     @RequestMapping(value="/", method= RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseDTO> addNewDailyMapping(@Valid @RequestBody AddDailyMappingDTO dailyMappingDTO) throws InvalidDailyMappingException, DailyMappingDateNotValidException, MappingAlreadyExistsException, MqttException {
 
@@ -59,7 +59,7 @@ public class DailyMappingRestController {
         );
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_Admin','ROLE_Safety_Manager')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SAFETY_MANAGER')")
     @RequestMapping(value="/last", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DailyMappingViewDTO> getLastDailyMapping() {
 
@@ -72,7 +72,7 @@ public class DailyMappingRestController {
     }
 
 
-    @PreAuthorize("hasAnyRole('ROLE_Admin','ROLE_Ground_Worker')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_GROUND_WORKER')")
     @RequestMapping(value="/beacons", method =RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<EnabledMachineryDTO>> getActiveBeaconsListForToday() {
         List<Machinery> todayEnabledMachines = siteConfigurationService.getTodayEnabledMachines();
@@ -84,7 +84,7 @@ public class DailyMappingRestController {
         return ResponseEntity.ok(allMachinesDTO);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_Admin','ROLE_Equipment_Operator')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EQUIPMENT_OPERATOR')")
     @RequestMapping(value="/equipmentOperators/{driverID}", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<EquipmentOperatorMachineryDTO>> getEnabledMachinesForDriver(@PathVariable("driverID") String driverID) {
         List<Machinery> todayEnabledMachinesByDriver = siteConfigurationService.getTodayEnabledMachinesForDriver(driverID);

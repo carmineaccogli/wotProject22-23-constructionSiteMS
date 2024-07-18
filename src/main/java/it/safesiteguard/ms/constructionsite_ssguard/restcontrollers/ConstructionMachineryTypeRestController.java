@@ -35,7 +35,7 @@ public class ConstructionMachineryTypeRestController {
     private MachineryTypeMapper machineryTypeMapper;
 
 
-    @PreAuthorize("hasAnyRole('ROLE_Admin','ROLE_Safety_Manager')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SAFETY_MANAGER')")
     @RequestMapping(value="/", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<MachineryTypeDTO>> getAllMachineryTypes() {
         List<ConstructionMachineryType> allMachineryTypes = machineryTypeService.getAll();
@@ -47,7 +47,7 @@ public class ConstructionMachineryTypeRestController {
         return ResponseEntity.ok(allTypesDTO);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_Admin','ROLE_Safety_Manager')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SAFETY_MANAGER')")
     @RequestMapping(value="", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<MachineryTypeDTO>> getMachineryTypesWithSpecificLicence(@RequestParam(value="specificLicence", required = true) boolean specificLicence ) {
         List<ConstructionMachineryType> machineryTypeFound = machineryTypeService.getMachineryTypesBySpecificLicence(specificLicence);
@@ -59,7 +59,7 @@ public class ConstructionMachineryTypeRestController {
         return ResponseEntity.ok(typesDTO);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_Admin','ROLE_Safety_Manager')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SAFETY_MANAGER')")
     @RequestMapping(value="/", method=RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseDTO> addNewType(@Valid @RequestBody MachineryTypeDTO machineryTypeDTO) throws DuplicateKeyException {
 

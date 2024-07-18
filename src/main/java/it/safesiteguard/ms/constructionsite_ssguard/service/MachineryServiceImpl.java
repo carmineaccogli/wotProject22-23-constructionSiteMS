@@ -4,12 +4,17 @@ package it.safesiteguard.ms.constructionsite_ssguard.service;
 import it.safesiteguard.ms.constructionsite_ssguard.domain.Beacon;
 import it.safesiteguard.ms.constructionsite_ssguard.domain.ConstructionMachineryType;
 import it.safesiteguard.ms.constructionsite_ssguard.domain.Machinery;
-import it.safesiteguard.ms.constructionsite_ssguard.domain.Worker;
 import it.safesiteguard.ms.constructionsite_ssguard.exceptions.*;
+import it.safesiteguard.ms.constructionsite_ssguard.messages.AlertMessage;
+import it.safesiteguard.ms.constructionsite_ssguard.messages.GeneralAlertMessage;
 import it.safesiteguard.ms.constructionsite_ssguard.repositories.MachineryRepository;
+import org.eclipse.paho.mqttv5.common.MqttException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +27,10 @@ public class MachineryServiceImpl implements MachineryService {
 
     @Autowired
     private MachineryTypeService machineryTypeService;
+
+    @Autowired
+    private MqttPublisher mqttPublisher;
+
 
     public List<Machinery> getAll() {
         return machineryRepository.findAll();
@@ -124,6 +133,29 @@ public class MachineryServiceImpl implements MachineryService {
         }
 
         throw  new BeaconNotFoundException();
+    }
+
+
+    public boolean sendGeneralAlarm(String description, String priority)  {
+
+        GeneralAlertMessage alarmMessage = new GeneralAlertMessage();
+        alarmMessage.setType(AlertMessage.Type.GENERAL);
+        alarmMessage.setTechnologyID("mqtt-communication");
+        alarmMessage.setDescription(description);
+        alarmMessage.setPriority(AlertMessage.Priority.valueOf(priority.toUpperCase()));
+
+        /*ZoneId zoneId = ZoneId.systemDefault();
+        ZonedDateTime zonedDateTime = LocalDateTime.now().atZone(zoneId);*/
+
+        alarmMessage.setTimestamp(LocalDateTime.now());
+
+        System.out.println(alarmMessage.getType());
+        System.out.println(alarmMessage.getDescription());
+        System.out.println(alarmMessage.getTechnologyID());
+        System.out.println(alarmMessage.getPriority());
+        System.out.println(alarmMessage.getTimestamp());
+
+        return mqttPublisher.sendGeneralAlarm(alarmMessage);
     }
 
 }

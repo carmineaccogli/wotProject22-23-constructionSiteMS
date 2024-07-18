@@ -10,11 +10,14 @@ import it.safesiteguard.ms.constructionsite_ssguard.exceptions.*;
 import it.safesiteguard.ms.constructionsite_ssguard.mappers.MachineryMapper;
 import it.safesiteguard.ms.constructionsite_ssguard.service.MachineryService;
 import jakarta.validation.Valid;
+import org.eclipse.paho.mqttv5.common.MqttException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpServerErrorException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,6 +35,7 @@ public class MachineryRestController {
     @Autowired
     private MachineryService machineryService;
 
+    @PreAuthorize("hasAnyRole('ROLE_Admin','ROLE_Safety_Manager')")
     @RequestMapping(value="/", method= RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseDTO> machineryRegistration(@Valid @RequestBody MachineryRegistrationDTO machineryRegistrationDTO) throws MachineryTypeNotFoundException {
 
@@ -48,6 +52,7 @@ public class MachineryRestController {
         );
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_Admin','ROLE_Safety_Manager')")
     @RequestMapping(value="/", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<MachineryDTO>> getAllMachineries() {
         List<Machinery> allMachineries = machineryService.getAll();
@@ -59,6 +64,7 @@ public class MachineryRestController {
         return ResponseEntity.ok(allMachineriesDTO);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_Admin','ROLE_Safety_Manager')")
     @RequestMapping(value="/{machineryID}", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MachineryDTO> getMachineryByID(@PathVariable("machineryID")String machineryID) throws MachineryNotFoundException {
 
@@ -68,6 +74,7 @@ public class MachineryRestController {
         return ResponseEntity.ok(result);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_Admin','ROLE_Safety_Manager')")
     @RequestMapping(value="/{machineryID}/beacons", method=RequestMethod.PATCH, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> addBeaconToMachinery(@PathVariable("machineryID") String machineryID, @Valid @RequestBody MachineryBeaconOnlyDTO machineryBeaconOnlyDTO) throws MachineryNotFoundException, BeaconAlreadyAssociatedException {
 
@@ -76,6 +83,7 @@ public class MachineryRestController {
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_Admin','ROLE_Safety_Manager')")
     @RequestMapping(value="/{machineryID}/beacons/{beaconID}", method = RequestMethod.DELETE)
     public ResponseEntity<?> removeBeaconFromMachinery(@PathVariable("machineryID") String machineryID,
                                                        @PathVariable("beaconID") String beaconID) throws MachineryNotFoundException, BeaconNotFoundException {
@@ -84,12 +92,18 @@ public class MachineryRestController {
         return ResponseEntity.noContent().build();
     }
 
-    /*@RequestMapping(value="/alarms", method=RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseDTO> sendGeneralAlarms(@RequestBody GeneralAlarmDTO generalAlarmDTO) {
+    @PreAuthorize("hasAnyRole('ROLE_Admin','ROLE_Safety_Manager')")
+    @RequestMapping(value="/general_alarm", method=RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> sendGeneralAlarms(@Valid @RequestBody GeneralAlarmDTO generalAlarmDTO) {
 
+        boolean status = machineryService.sendGeneralAlarm(generalAlarmDTO.getDescription(), generalAlarmDTO.getPriority());
 
+        if(status)
+            return ResponseEntity.noContent().build();
+        else
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore durante l'invio del messaggio MQTT");
 
-    }*/
+    }
 
 
 

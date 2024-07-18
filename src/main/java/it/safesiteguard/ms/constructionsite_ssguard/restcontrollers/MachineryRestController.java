@@ -52,7 +52,7 @@ public class MachineryRestController {
         );
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_Admin','ROLE_Safety_Manager')")
+    @PreAuthorize("hasAnyRole('ROLE_Admin','ROLE_Safety_Manager', 'ROLE_Control_Board')")
     @RequestMapping(value="/", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<MachineryDTO>> getAllMachineries() {
         List<Machinery> allMachineries = machineryService.getAll();

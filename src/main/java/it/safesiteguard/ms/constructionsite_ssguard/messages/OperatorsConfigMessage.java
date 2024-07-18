@@ -1,9 +1,10 @@
 package it.safesiteguard.ms.constructionsite_ssguard.messages;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
-public class OperatorsConfigMessage {
+public class OperatorsConfigMessage implements Serializable {
 
     private LocalDate date;
 

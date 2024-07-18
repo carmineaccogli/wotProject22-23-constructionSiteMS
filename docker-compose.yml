@@ -5,7 +5,7 @@ services:
   database:
     platform: linux/x86_64
     image: mongo:4.0
-    container_name: mongodb_disposalms
+    container_name: mongodb
     ports:
       - 27017:27017
     volumes:
@@ -41,6 +41,7 @@ services:
       - "8081"
     depends_on:
       - database
+      - rabbitmq
     networks:
       - my-network
     volumes:

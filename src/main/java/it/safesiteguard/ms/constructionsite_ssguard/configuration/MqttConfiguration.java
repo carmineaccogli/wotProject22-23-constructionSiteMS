@@ -1,9 +1,9 @@
 package it.safesiteguard.ms.constructionsite_ssguard.configuration;
 
 
-import org.eclipse.paho.mqttv5.client.MqttAsyncClient;
-import org.eclipse.paho.mqttv5.client.MqttClient;
-import org.eclipse.paho.mqttv5.client.MqttConnectionOptions;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.mqttv5.client.*;
+import org.eclipse.paho.mqttv5.client.persist.MemoryPersistence;
 import org.eclipse.paho.mqttv5.common.MqttException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -37,20 +37,50 @@ public class MqttConfiguration {
 
 
 
-    @Bean
-    public MqttAsyncClient mqttAsyncClient() throws MqttException {
-        MqttAsyncClient asyncClient = new MqttAsyncClient(brokerUrl, clientId);
+    /*@Bean
+    public MqttAsyncClient mqttAsyncClient()  {
+        MqttAsyncClient asyncClient = null;
 
-        MqttConnectionOptions mqttConnectionOptions = new MqttConnectionOptions();
-        mqttConnectionOptions.setUserName(username);
-        mqttConnectionOptions.setPassword(password.getBytes());
-        mqttConnectionOptions.setCleanStart(true);
+        try {
+            asyncClient = new MqttAsyncClient(brokerUrl, clientId);
 
-        asyncClient.connect(mqttConnectionOptions);
+            MqttConnectionOptions mqttConnectionOptions = new MqttConnectionOptions();
+            mqttConnectionOptions.setUserName(username);
+            mqttConnectionOptions.setPassword(password.getBytes());
+            mqttConnectionOptions.setCleanStart(true);
+            mqttConnectionOptions.setAutomaticReconnect(true);
+
+            IMqttToken token = asyncClient.connect(mqttConnectionOptions);
+            token.waitForCompletion();
+
+            if(!asyncClient.isConnected())
+                asyncClient.reconnect();
+
+        } catch(MqttException ex) {
+            ex.printStackTrace();
+        }
+
+
         return asyncClient;
+    }*/
+
+    @Bean
+    public IMqttAsyncClient mqttClient() throws MqttException {
+
+        IMqttAsyncClient client = new MqttAsyncClient(brokerUrl, clientId, new MemoryPersistence());
+        MqttConnectionOptions options = new MqttConnectionOptions();
+        options.setUserName(username);
+        options.setPassword(password.getBytes());
+        options.setAutomaticReconnect(true);
+        options.setCleanStart(true);
+
+        client.connect(options).waitForCompletion();
+        return client;
     }
 
-
-
-
 }
+
+
+
+
+

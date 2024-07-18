@@ -2,6 +2,7 @@ package it.safesiteguard.ms.constructionsite_ssguard.exceptions;
 import com.fasterxml.jackson.databind.exc.InvalidTypeIdException;
 import it.safesiteguard.ms.constructionsite_ssguard.domain.Beacon;
 import it.safesiteguard.ms.constructionsite_ssguard.dto.ExceptionDTO;
+import org.eclipse.paho.mqttv5.common.MqttException;
 import org.springframework.core.MethodParameter;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
@@ -207,6 +208,12 @@ public class CustomExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(ex.getBody());
+    }
+
+    @ExceptionHandler(MqttException.class)
+    public void mqttExceptionHandler(MqttException ex) {
+        System.out.println("ERRORI CON LA CONNESSIONE AL BROKER MQTT: "+ex.getCause());
+        ex.printStackTrace();
     }
 
 

@@ -4,6 +4,7 @@ import it.safesiteguard.ms.constructionsite_ssguard.domain.Worker;
 import it.safesiteguard.ms.constructionsite_ssguard.dto.AuthorizedOperatorDTO;
 import it.safesiteguard.ms.constructionsite_ssguard.dto.UserRegistrationDTO;
 import it.safesiteguard.ms.constructionsite_ssguard.event.WorkerDeletionEvent;
+import it.safesiteguard.ms.constructionsite_ssguard.security.JwtUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpHeaders;
@@ -25,8 +26,8 @@ public class APIServiceImpl implements APIService {
     @Autowired
     ApplicationEventPublisher eventPublisher;
 
-    /*@Autowired
-    private JwtUtilities jwtUtilities;*/
+    @Autowired
+    private JwtUtilities jwtUtilities;
 
     /** Chiamata API a LoginMS per la creazione dello user
      *
@@ -41,11 +42,11 @@ public class APIServiceImpl implements APIService {
         userRegistrationDTO.setEmail(worker.getEmail());
         userRegistrationDTO.setRole(worker.getType());
 
-        //final String jwtToken = jwtUtilities.generateToken();
+        final String jwtToken = jwtUtilities.generateToken();
 
         return createUserWebClient.post()
                 .uri(uriBuilder -> uriBuilder.path("/worker-registration").build())
-                //.header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(userRegistrationDTO),UserRegistrationDTO.class)
                 .retrieve()
@@ -63,12 +64,12 @@ public class APIServiceImpl implements APIService {
      */
     public List<AuthorizedOperatorDTO> APICALL_getAuthOperatorsMacAddresses() throws WebClientRequestException {
 
-        //final String jwtToken = jwtUtilities.generateToken();
+        final String jwtToken = jwtUtilities.generateToken();
 
         return createUserWebClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/users/macAddresses")
                         .build())
-                //.header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .retrieve()
                 .bodyToFlux(AuthorizedOperatorDTO.class)
                 .collectList()

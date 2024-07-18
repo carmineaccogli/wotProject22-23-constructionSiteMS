@@ -37,17 +37,16 @@ public class JwtUtilities {
         return extractExpiration(token).before(new Date());
     }
 
-    public String generateToken(String id, String username, String role) {
+    public String generateToken() {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("userID", id);
-        claims.put("role",role);
+        claims.put("role",ROLE);
         claims.put("aud",AUDIENCE);
-        return createToken(claims, username);
+        return createToken(claims);
     }
 
-    private String createToken(Map<String, Object> claims, String subject) {
+    private String createToken(Map<String, Object> claims) {
 
-        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
+        return Jwts.builder().setClaims(claims).setSubject(SUBJECT).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setIssuer(ISSUER)
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
                 .signWith(SignatureAlgorithm.HS256, JWT_SECRET).compact();

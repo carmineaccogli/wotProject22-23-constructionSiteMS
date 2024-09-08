@@ -9,6 +9,7 @@ import it.safesiteguard.ms.constructionsite_ssguard.exceptions.TaskFailedExcepti
 import it.safesiteguard.ms.constructionsite_ssguard.messages.OperatorsConfigMessage;
 import it.safesiteguard.ms.constructionsite_ssguard.repositories.DailySiteConfigurationRepository;
 import it.safesiteguard.ms.constructionsite_ssguard.repositories.TaskStatusRepository;
+import org.eclipse.paho.client.mqttv3.logging.Logger;
 import org.eclipse.paho.mqttv5.common.MqttException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.retry.annotation.Backoff;
@@ -422,14 +423,28 @@ public class SiteConfigurationServiceImpl implements SiteConfigurationService {
         for(DailySiteConfiguration.ActiveMachines activeMachinery: activeMachinesList) {
 
             // 2
-            List<String> macAddresses = activeMachinery.getInfoOperator().stream()
-                    .map(infoOperator -> allOperatorsInfo.stream()
-                            .filter(genericOperator -> genericOperator.getUserID().equals(infoOperator.getId()))
-                            .map(AuthorizedOperatorDTO::getMacAddress)
-                            .findFirst()
-                            .orElse(null))
-                    .filter(Objects::nonNull)
-                    .toList();
+            List<String> macAddresses = new ArrayList<>();
+
+            for (DailySiteConfiguration.InfoOperator infoOperator : activeMachinery.getInfoOperator()) {
+                String userID = null;
+
+                try {
+                    Worker worker = workerService.findWorkerById(infoOperator.getId());
+                    userID = worker.getUserID();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    System.out.println("ERROR IN CONFIGURATION ACTIVATING");
+                    continue;
+                }
+
+
+                for (AuthorizedOperatorDTO genericOperator : allOperatorsInfo) {
+                    if (genericOperator.getUserID().equals(userID) && genericOperator.getMacAddress()!= null) {
+                        macAddresses.add(genericOperator.getMacAddress());
+                        break;
+                    }
+                }
+            }
 
             // 3
             OperatorsConfigMessage singleMessage = new OperatorsConfigMessage();
